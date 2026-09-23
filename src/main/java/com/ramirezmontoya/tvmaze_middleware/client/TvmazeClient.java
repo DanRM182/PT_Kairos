@@ -1,6 +1,7 @@
 package com.ramirezmontoya.tvmaze_middleware.client;
 
 import com.ramirezmontoya.tvmaze_middleware.dto.TvmazeShow;
+import lombok.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
