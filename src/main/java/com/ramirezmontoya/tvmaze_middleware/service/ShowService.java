@@ -31,12 +31,10 @@ public class ShowService {
 
         List<Long> showIds = shows.stream().map(TvmazeShow::id).toList();
 
-        Map<Long, List<CommentRatingResponse>> commentsRatings = commentRatingService.obtenerComentariosRating(showIds);
-
         return shows.stream()
                 .map(show ->
                         showMapper.convertirAResponse(
-                                show, commentsRatings.getOrDefault(show.id(), List.of())))
+                                show, obtenerCommentsRatingsPorShow(showIds).getOrDefault(show.id(), List.of())))
                 .toList();
     }
 
@@ -50,5 +48,9 @@ public class ShowService {
                                     log.info("Almacenando datos del Show con ID {} en la caché", idShow);
                                     return show;
                                 });
+    }
+
+    private Map<Long, List<CommentRatingResponse>> obtenerCommentsRatingsPorShow(List<Long> showIds) {
+        return commentRatingService.obtenerComentariosRating(showIds);
     }
 }
