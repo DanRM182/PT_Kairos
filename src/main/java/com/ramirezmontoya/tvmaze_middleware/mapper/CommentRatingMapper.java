@@ -19,8 +19,6 @@ public class CommentRatingMapper {
     public CommentRatingResponse documentoAResponse(CommentRatingDocument documento) {
         return documento != null ?
                 new CommentRatingResponse(
-                        documento.getId(),
-                        documento.getShowId(),
                         documento.getComment(),
                         documento.getRating())
                 : null;
