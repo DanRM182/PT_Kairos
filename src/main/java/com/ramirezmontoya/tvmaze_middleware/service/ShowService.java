@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -21,5 +22,9 @@ public class ShowService {
                 .map(TvMazeSearchResult::show)
                 .map(showMapper::convertirAResponse)
                 .toList();
+    }
+
+    public Map<String, Object> buscarShow(Long idShow) {
+        return tvmazeClient.obtenerShow(idShow);
     }
 }
