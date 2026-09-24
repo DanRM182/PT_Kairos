@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface CommentRatingRepository extends MongoRepository<CommentRatingDocument, String> {
     List<CommentRatingDocument> findByShowIdIn(Collection<Long> showIds);
-
-    List<CommentRatingDocument> findByShowId(Long showId);
 }

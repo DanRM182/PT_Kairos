@@ -12,8 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -29,28 +31,63 @@ public class ShowService {
                 .map(TvMazeSearchResult::show)
                 .toList();
 
-        List<Long> showIds = shows.stream().map(TvmazeShow::id).toList();
+        Map<Long, List<CommentRatingResponse>> comentariosRatings =
+                commentRatingService.obtenerComentariosRating(obtenerShowIds(shows));
 
         return shows.stream()
                 .map(show ->
                         showMapper.convertirAResponse(
-                                show, obtenerCommentsRatingsPorShow(showIds).getOrDefault(show.id(), List.of())))
+                                show, comentariosRatings.getOrDefault(show.id(), List.of())))
                 .toList();
     }
 
-    public Map<String, Object> obtenerShowPorId(Long idShow) {
-        return showRepository.findById(idShow)
-                        .map(ShowDocument::getData)
-                                .orElseGet(() -> {
-                                    log.info("No se encontró el Show con ID {} en la caché", idShow);
-                                    Map<String, Object> show = tvmazeClient.obtenerShowPorId(idShow);
-                                    showRepository.save(new ShowDocument(idShow, show));
-                                    log.info("Almacenando datos del Show con ID {} en la caché", idShow);
-                                    return show;
-                                });
+    public Map<String, Object> obtenerShowPorIdConComentariosRatings(Long idShow) {
+        Map<String, Object> show = obtenerShow(idShow);
+
+        log.info("Obtenemos el show");
+
+        List<CommentRatingResponse> comentariosRatings = comentariosRatingsDe(idShow);
+
+        log.info("Obtenemos los comentarios del show");
+
+        return conComentarios(show, comentariosRatings);
     }
 
-    private Map<Long, List<CommentRatingResponse>> obtenerCommentsRatingsPorShow(List<Long> showIds) {
-        return commentRatingService.obtenerComentariosRating(showIds);
+    private List<CommentRatingResponse> comentariosRatingsDe(Long showId) {
+        return commentRatingService.obtenerComentariosRating(Set.of(showId))
+                .getOrDefault(showId, List.of());
     }
+
+    private Map<String, Object> conComentarios(Map<String, Object> show,
+                                               List<CommentRatingResponse> comentariosRatings) {
+        Map<String, Object> todoJunto = new LinkedHashMap<>(show);
+
+        todoJunto.put("comments", comentariosRatings);
+
+        return todoJunto;
+    }
+
+    private List<Long> obtenerShowIds(List<TvmazeShow> shows) {
+        return shows.stream().map(TvmazeShow::id).toList();
+    }
+
+    private Map<String, Object> obtenerShow(Long idShow) {
+        return showRepository.findById(idShow)
+                .map(ShowDocument::getData)
+                .orElseGet(() -> consultarYGuardar(idShow));
+    }
+
+    private Map<String, Object> consultarYGuardar(Long idShow) {
+        log.info("No se encontró el Show con ID {} en la caché", idShow);
+
+        Map<String, Object> show = tvmazeClient.obtenerShowPorId(idShow);
+
+        showRepository.save(new ShowDocument(idShow, show));
+
+        log.info("Almacenando datos del Show con ID {} en la caché", idShow);
+
+        return show;
+    }
+
+
 }

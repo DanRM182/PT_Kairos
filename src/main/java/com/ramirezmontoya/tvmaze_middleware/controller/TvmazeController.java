@@ -26,8 +26,8 @@ public class TvmazeController {
     }
 
     @GetMapping("/{idShow}")
-    public Map<String, Object> obtenerShowPorId(
+    public Map<String, Object> obtenerShowPorIdConComentariosRatings(
             @PathVariable @Positive Long idShow) {
-        return servicio.obtenerShowPorId(idShow);
+        return servicio.obtenerShowPorIdConComentariosRatings(idShow);
     }
 }
