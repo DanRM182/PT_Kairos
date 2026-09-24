@@ -22,4 +22,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                 .body(Map.of("error", "No se pudo consultar TV Maze"));
     }
+
+    @ExceptionHandler(ShowNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleShowNotFoundException(ShowNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "No se pudo encontrar el objeto buscado"));
+    }
 }

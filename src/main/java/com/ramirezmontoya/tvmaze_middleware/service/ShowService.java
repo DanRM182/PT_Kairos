@@ -24,7 +24,7 @@ public class ShowService {
                 .toList();
     }
 
-    public Map<String, Object> buscarShow(Long idShow) {
-        return tvmazeClient.obtenerShow(idShow);
+    public Map<String, Object> obtenerShowPorId(Long idShow) {
+        return tvmazeClient.obtenerShowPorId(idShow);
     }
 }

@@ -26,7 +26,7 @@ public class TvmazeClient {
                 .body(new ParameterizedTypeReference<List<TvMazeSearchResult>>() {});
     }
 
-    public Map<String, Object> obtenerShow(Long id) {
+    public Map<String, Object> obtenerShowPorId(Long id) {
         try {
             return restClient.get()
                     .uri("/shows/{id}", id)
