@@ -1,7 +1,7 @@
 package com.ramirezmontoya.tvmaze_middleware.client;
 
+import com.ramirezmontoya.tvmaze_middleware.dto.TvMazeSearchResult;
 import com.ramirezmontoya.tvmaze_middleware.dto.TvmazeShow;
-import lombok.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -16,10 +16,10 @@ public class TvmazeClient {
         this.restClient = restClient;
     }
 
-    public List<TvmazeShow> buscarShows(String query) {
+    public List<TvMazeSearchResult> buscarShows(String query) {
         return restClient.get()
                 .uri("/search/shows?q={q}", query)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<TvmazeShow>>() {});
+                .body(new ParameterizedTypeReference<List<TvMazeSearchResult>>() {});
     }
 }
