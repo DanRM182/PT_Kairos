@@ -28,4 +28,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", "No se pudo encontrar el objeto buscado"));
     }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest()
+                .body(Map.of("error " + HttpStatus.BAD_REQUEST.value(), e.getMessage())
+        );
+    }
 }

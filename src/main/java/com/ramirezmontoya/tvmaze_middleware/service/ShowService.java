@@ -4,7 +4,6 @@ import com.ramirezmontoya.tvmaze_middleware.client.TvmazeClient;
 import com.ramirezmontoya.tvmaze_middleware.document.ShowDocument;
 import com.ramirezmontoya.tvmaze_middleware.dto.ResumenResponse;
 import com.ramirezmontoya.tvmaze_middleware.dto.TvMazeSearchResult;
-import com.ramirezmontoya.tvmaze_middleware.dto.TvmazeShow;
 import com.ramirezmontoya.tvmaze_middleware.mapper.ShowMapper;
 import com.ramirezmontoya.tvmaze_middleware.repository.ShowRepository;
 import lombok.AllArgsConstructor;
