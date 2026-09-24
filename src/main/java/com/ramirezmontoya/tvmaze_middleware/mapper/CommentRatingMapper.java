@@ -9,10 +9,11 @@ import org.springframework.stereotype.Component;
 public class CommentRatingMapper {
     public CommentRatingDocument requestADocumento(CommentRatingRequest request) {
         return request != null ?
-                new CommentRatingDocument(
-                        null, request.showId(),
-                        request.comment(), request.rating())
-                : null;
+                CommentRatingDocument.builder()
+                        .showId(request.showId())
+                        .comment(request.comment())
+                        .rating(request.rating())
+                        .build() : null;
     }
 
     public CommentRatingResponse documentoAResponse(CommentRatingDocument documento) {
