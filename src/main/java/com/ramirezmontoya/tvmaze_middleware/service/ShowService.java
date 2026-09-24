@@ -2,8 +2,10 @@ package com.ramirezmontoya.tvmaze_middleware.service;
 
 import com.ramirezmontoya.tvmaze_middleware.client.TvmazeClient;
 import com.ramirezmontoya.tvmaze_middleware.document.ShowDocument;
+import com.ramirezmontoya.tvmaze_middleware.dto.CommentRating.CommentRatingResponse;
 import com.ramirezmontoya.tvmaze_middleware.dto.ResumenResponse;
 import com.ramirezmontoya.tvmaze_middleware.dto.TvMazeSearchResult;
+import com.ramirezmontoya.tvmaze_middleware.dto.TvmazeShow;
 import com.ramirezmontoya.tvmaze_middleware.mapper.ShowMapper;
 import com.ramirezmontoya.tvmaze_middleware.repository.ShowRepository;
 import lombok.AllArgsConstructor;
@@ -18,13 +20,23 @@ import java.util.Map;
 @Slf4j
 public class ShowService {
     private final TvmazeClient tvmazeClient;
+    private final CommentRatingService commentRatingService;
     private final ShowMapper showMapper;
     private final ShowRepository showRepository;
 
     public List<ResumenResponse> buscar(String query) {
-        return tvmazeClient.buscarShows(query).stream()
+        List<TvmazeShow> shows = tvmazeClient.buscarShows(query).stream()
                 .map(TvMazeSearchResult::show)
-                .map(showMapper::convertirAResponse)
+                .toList();
+
+        List<Long> showIds = shows.stream().map(TvmazeShow::id).toList();
+
+        Map<Long, List<CommentRatingResponse>> commentsRatings = commentRatingService.obtenerComentariosRating(showIds);
+
+        return shows.stream()
+                .map(show ->
+                        showMapper.convertirAResponse(
+                                show, commentsRatings.getOrDefault(show.id(), List.of())))
                 .toList();
     }
 
