@@ -14,7 +14,9 @@ public class CommentRatingService {
     private final CommentRatingRepository commentRatingRepository;
     private final CommentRatingMapper commentRatingMapper;
 
-    public void guardarComentariosRating(CommentRatingRequest) {
-        log.info("Obtenemos y ");
+    public void guardarComentariosRating(CommentRatingRequest commentRatingRequest) {
+        log.info("Obtenemos y guardamos el documento");
+
+        commentRatingRepository.save(commentRatingMapper.requestADocumento(commentRatingRequest));
     }
 }
